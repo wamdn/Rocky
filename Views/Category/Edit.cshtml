@@ -1,12 +1,13 @@
 ﻿@model Rocky.Models.Category
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit category";
 }
 
 <div class="container">
-    <form class="border p-3" method="post" asp-action="Create">
+    <form class="border p-3" method="post">
+        <input asp-for="Id" hidden />
         <div class="form-group row ">
-            <h2 class="text-info pl-3">Add Category</h2>
+            <h2 class="text-info pl-3">Edit Category</h2>
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row pt-3">
@@ -16,7 +17,7 @@
                         <label asp-for="Name"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Name" class="form-control" />
+                        <input asp-for="Name" class="form-control" value="@Model.Name" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
@@ -26,7 +27,7 @@
                         <label asp-for="DisplayOrder"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="DisplayOrder" class="form-control" />
+                        <input asp-for="DisplayOrder" class="form-control" value="@Model.DisplayOrder"/>
                         <span asp-validation-for="DisplayOrder" class="text-danger"></span>
                     </div>
 
@@ -35,16 +36,10 @@
                     <div class="col-8 offset-4 row">
 
                         <div class="col">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-share-square"></i>
-                                Create
-                            </button>
+                            <button type="submit" class="btn btn-primary w-100">Edit</button>
                         </div>
                         <div class="col">
-                            <a asp-action="Index" class="btn btn-dark w-100">
-                                <i class="fas fa-undo"></i>
-                                Back
-                            </a>
+                            <a asp-action="Index" class="btn btn-dark w-100">Back</a>
                         </div>
                     </div>
                 </div>
@@ -53,10 +48,9 @@
                 @* Keep this empty *@
             </div>
         </div>
-    </form>
+</form>
 </div>
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
+
+@section Scripts{ 
+    @{ <partial name="_ValidationScriptsPartial" /> }
 }

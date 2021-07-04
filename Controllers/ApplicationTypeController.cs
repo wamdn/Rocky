@@ -10,71 +10,63 @@ using System.Threading.Tasks;
 
 namespace Rocky.Controllers
 {
-    public class CategoryController : Controller
+    public class ApplicationTypeController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        public ApplicationTypeController(ApplicationDbContext db)
         {
             _db = db;
         }
-        
+
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> categories = await _db.Category.ToArrayAsync(); ;
-            return View(categories);
+            IEnumerable<ApplicationType> appTypes = await _db.ApplicationType.ToListAsync(); 
+            return View(appTypes);
         }
 
-        // Create
         public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public IActionResult Create(ApplicationType appType)
         {
             if (!ModelState.IsValid) return View();
 
-            _db.Category.Add(category);
-            await _db.SaveChangesAsync();
+            _db.ApplicationType.Add(appType);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        // Edit
-        public async Task<IActionResult> Edit(  // Get
+        public async Task<IActionResult> Edit(
             [Required]
             [Range(1, int.MaxValue)]
             int id)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            ApplicationType? appType = await _db.ApplicationType.FindAsync(id);
+            if (appType is null) return NotFound();
 
-            var category = await _db.Category.FindAsync(id);
-            if (category is null) return NotFound();
-
-            return View(category);
+            return View(appType);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Category category)
+        public async Task<IActionResult> Edit(ApplicationType appType)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            _db.Category.Update(category);
+            _db.ApplicationType.Update(appType);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        // Delete
         public async Task<IActionResult> Delete(
-            [Required]
+            [Required] 
             [Range(1, int.MaxValue)] 
             int id)
         {
-            if (!ModelState.IsValid) return BadRequest();
-
-            var category = await _db.Category.FindAsync(id);
+            ApplicationType? category = await _db.ApplicationType.FindAsync(id);
             if (category is null) return NotFound();
 
-            _db.Category.Remove(category);
+            _db.ApplicationType.Remove(category);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
