@@ -8,7 +8,9 @@ using Microsoft.Extensions.Hosting;
 using Rocky.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rocky
@@ -55,6 +57,10 @@ namespace Rocky
 
             app.UseEndpoints(endpoints =>
             {
+                /*var culture = new CultureInfo("fr-FR");
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;*/
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

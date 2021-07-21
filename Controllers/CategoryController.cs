@@ -20,7 +20,7 @@ namespace Rocky.Controllers
         
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> categories = await _db.Category.ToArrayAsync(); ;
+            IEnumerable<Category> categories = await _db.Category.ToArrayAsync();
             return View(categories);
         }
 
