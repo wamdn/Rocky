@@ -1,5 +1,6 @@
 ﻿#nullable disable
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Rocky.Models;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,31 @@ namespace Rocky.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        private readonly IConfiguration _configuration;
+
+        public DbSet<Category> Category { get; set; }
+        public DbSet<ApplicationType> ApplicationType { get; set; }
+        public DbSet<Product> Product { get; set; }
+
+        public ApplicationDbContext(IConfiguration configuration)
         {
+            _configuration = configuration;
+        }       
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>(entity => { 
+            modelBuilder.Entity<Product>(entity => {
                 entity
                     .Property(e => e.Price)
                     .HasPrecision(10, 2);
 
-                /*entity
+                /*
+                entity
                     .HasOne(p => p.Category)
                     .WithMany()
                     .HasForeignKey(p => p.CategoryId)
@@ -31,9 +44,5 @@ namespace Rocky.Data
 
             base.OnModelCreating(modelBuilder);
         }
-
-        public DbSet<Category> Category { get; set; }
-        public DbSet<ApplicationType> ApplicationType { get; set; }
-        public DbSet<Product> Product { get; set; }
     }
 }

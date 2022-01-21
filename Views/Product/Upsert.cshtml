@@ -1,5 +1,4 @@
 ﻿@model Rocky.Models.ViewModels.ProductVM
-@using System.IO
 @{
     string controller = "Product";
     string action = Model.Product.Id == default ? "Create" : "Edit";
@@ -25,8 +24,7 @@
             <div class="col-8">
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Name"></label>
-                        <span class="text-danger">*</span>
+                        <label asp-for="Product.Name" class="required"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Name" class="form-control" />
@@ -36,8 +34,7 @@
 
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Price"></label>
-                        <span class="text-danger">*</span>
+                        <label asp-for="Product.Price" class="required"></label>
                     </div>
                     <div class="col-8">
                         <input asp-for="Product.Price" class="form-control" />
@@ -47,40 +44,57 @@
 
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.Discription"></label>
+                        <label asp-for="Product.ShortDescription"></label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="Product.Discription" id="summernote" class="form-control"></textarea>
+                        <input asp-for="Product.ShortDescription" class="form-control" />
+                        <span asp-validation-for="Product.ShortDescription" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="Product.CategoryId">Category</label>
-                        <span class="text-danger">*</span>
+                        <label asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
-                        @* Category list *@
+                        <textarea asp-for="Product.Description" id="summernote" class="form-control"></textarea>
+                    </div>
+                </div>
 
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.CategoryId" class="required">Category</label>
+                    </div>
+                    <div class="col-8">
                         <select asp-for="Product.CategoryId" asp-items="@Model?.CategorySelectList" class="form-control">
                             <option selected disabled>-- Select category --</option>
                         </select>
-
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <div class="col-4">
-                        <label for="image">Image</label>
-                        <span class="text-danger">*</span>
+                        <label asp-for="Product.ApplicationTypeId" class="required"></label>
                     </div>
                     <div class="col-8">
-                         <input type="file" id="image" name="image" class="form-control form-control-file" multiple>
+                        <select asp-for="Product.ApplicationTypeId" asp-items="@Model?.ApplicationTypeSelectList" class="form-control">
+                            <option selected disabled>-- Select application type --</option>
+                        </select>
+                        <span asp-validation-for="Product.ApplicationTypeId"></span>
                     </div>
                 </div>
 
                 <div class="form-group row">
+                    <div class="col-4">
+                        <label for="image" class="required">Image</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" id="image" name="image" class="form-control-file" multiple>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-4">
                     <div class="col-8 offset-4 row">
                         <div class="col">
                             <button type="submit" class="btn btn-primary w-100">@action</button>
@@ -123,6 +137,7 @@
             height: 150
         }))
 
+        // Validation for image
         function validateInput(e) {
             if ($('#image').val() === '') {
                 e.preventDefault();

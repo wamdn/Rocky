@@ -30,11 +30,11 @@ namespace Rocky.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Product> products = await _db.Product.ToArrayAsync();
-            foreach (Product p in products)
-            {
-                p.Category = await _db.Category.FirstOrDefaultAsync(c => c.Id == p.CategoryId);
-            }
+            IEnumerable<Product> products = await _db.Product
+                .Include(p => p.Category)
+                .Include(p => p.ApplicationType)
+                .ToArrayAsync();
+
             return View(products);
         }
 
@@ -46,16 +46,24 @@ namespace Rocky.Controllers
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
-                }
-            );
+                });
 
-            //ViewBag.CategoryDropDown = categoryDropDown;
-            //ViewData["CategoryDropDown"] = categoryDropDown;
+            ApplicationType[] applicationTypes = await _db.ApplicationType.ToArrayAsync();
+            IEnumerable<SelectListItem> AppTypeDropDown = applicationTypes.Select(at => 
+                new SelectListItem 
+                { 
+                    Text = at.Name,
+                    Value = at.Id.ToString()
+                });
+
+            // ViewBag.CategoryDropDown = categoryDropDown;
+            // ViewData["CategoryDropDown"] = categoryDropDown;
 
             var productVM = new ProductVM
             {
                 Product = new Product(),
-                CategorySelectList = categoryDropDown
+                CategorySelectList = categoryDropDown,
+                ApplicationTypeSelectList = AppTypeDropDown
             };
 
             if (id is null) return View(productVM);
@@ -79,10 +87,18 @@ namespace Rocky.Controllers
                     {
                         Text = c.Name,
                         Value = c.Id.ToString()
-                    }
-                );
+                    });
+
+                ApplicationType[] applicationTypes = await _db.ApplicationType.ToArrayAsync();
+                IEnumerable<SelectListItem> AppTypeDropDown = applicationTypes.Select(at =>
+                    new SelectListItem
+                    {
+                        Text = at.Name,
+                        Value = at.Id.ToString()
+                    });
 
                 productVM.CategorySelectList = categoryDropDown;
+                productVM.ApplicationTypeSelectList = AppTypeDropDown;
                 return View(productVM);
             }
 
@@ -138,13 +154,13 @@ namespace Rocky.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
         public async Task<IActionResult> Delete([Required] int id)
         {
             if (!ModelState.IsValid) return BadRequest();
 
             Product? product = await _db.Product
                 .Include(p => p.Category)
+                .Include(p => p.ApplicationType)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product is null) return NotFound();

@@ -10,10 +10,7 @@
             <h2 class="display-3">@ViewData["Title"]</h2>
         </div>
         <div class="col-6 my-4 text-right">
-            <a asp-action="Upsert" class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                Add @controller
-            </a>
+            <a asp-action="Upsert" class="btn btn-primary"><i class="fas fa-plus"></i> Add @controller</a>
         </div>
     </div>
     @if (Model.Any())
@@ -23,24 +20,29 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Application Type</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @{int i = 1;}
+                @{int i = 0;}
                 @foreach (Product p in Model)
                 {
-                    <tr>
-                        <th scope="row">@i</th>
-                        <td>@p.Name</td>
-                        <td>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="actions on Product">
-                                <a asp-action="Upsert" asp-route-id="@p.Id" class="btn btn-outline-info">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-outline-danger">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                    i++;
+                <tr>
+                    <th scope="row">@(++i)</th>
+                    <td>@p.Name</td>
+                    <td>@p.Price</td>
+                    <td>@(p.Category?.Name ?? "null")</td>
+                    <td>@(p.ApplicationType?.Name ?? "null")</td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="actions on Product">
+                            <a asp-action="Upsert" asp-route-id="@p.Id" class="btn btn-outline-info"><i class="far fa-edit"></i> Edit</a>
+                            <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i> Delete</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

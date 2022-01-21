@@ -19,14 +19,24 @@ namespace Rocky.Models
         // [Column(TypeName = "decimal(10,2)")]      // set in ApplicationDbContext.OnModelCreating() 
         public decimal Price { get; set; }
 
-        public string? Discription { get; set; }
+        [MaxLength(50)]
+        [Display(Name = "Short description")]
+        public string? ShortDescription { get; set; }
+        public string? Description { get; set; }
         public string? Image { get; set; }
 
-        // Relationship
+        // OneToMany Category
         [Display(Name = "Category type")]
         public int CategoryId { get; set; }
-#nullable disable
+
         [ForeignKey("CategoryId")]
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
+
+        // OneToMany Application Type
+        [Display(Name = "Application Type")]
+        public int ApplicationTypeId { get; set; }
+
+        [ForeignKey("ApplicationTypeId")]
+        public virtual ApplicationType? ApplicationType { get; set; }
     }
 }

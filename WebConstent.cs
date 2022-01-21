@@ -9,5 +9,6 @@ namespace Rocky
     public class WebConstent
     { 
         public static readonly string ProductImagePath = Path.Combine("img", "product");
+        public static readonly string ShoppingCart = "ShopingCartProducts";
     }
 }
